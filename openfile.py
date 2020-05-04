@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
 """ Algorithms FOR ANTI-VIRUS 2020 - Nick Glebov
 IMPORTANT: MADE IN PYTHON 2.7
 
@@ -23,6 +25,8 @@ psutil- getting cpu usege of the current scanned file
 
 pickle- collects list packges to Server to be showen 
 """
+#!/usr/bin/env python
+# -*- coding: utf-8 -*
 try:
     import pickle
     import subprocess
@@ -248,15 +252,20 @@ try:
            pass
         
        print "=============================RUNNING==========================="
-       proc = subprocess.Popen(['python', "virus2."+file_end], shell=False)
-       time.sleep(1)
-       try:
-           pid = proc.pid
-           proc = psutil.Process(int(str(pid)))
-           t34 = threading.Thread(target=process, args=[proc])
-           t34.start()
-       except:
-           print "short"
+       print file_end
+       if file_end=="exe":
+           os.system("virus2."+file_end)
+       else:
+           proc = subprocess.Popen(['python', "virus2."+file_end], shell=False)
+           time.sleep(1)
+           try:
+               pid = proc.pid
+               proc = psutil.Process(int(str(pid)))
+               t34 = threading.Thread(target=process, args=[proc])
+               t34.start()
+           except:
+               
+               print "short"
        v=True
        
 #====================================SYS32==================================
@@ -314,7 +323,7 @@ try:
             dat=""
             time.sleep(2)                                                              
             ready=False
-            data = s.recv(10000)
+            data = s.recv(2005500)
             while data.find("don't")!=-1: #if the user does hash scan 
                 time.sleep(0.002)
                 s.send("keep")
