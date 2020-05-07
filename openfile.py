@@ -95,8 +95,12 @@ try:
             with open("portResults.txt",'r') as f:
                     data=f.read()        
             arr= re.findall('[A-Z]{3}.*?[E].*?[\n]',data)
-            newArr=[]     
+            newArr=[]
             for i in arr:
+               state=InBlackList(i)
+               if state!="no":
+                   Port.append(state)
+                   return 0
                if i.find("BEFE.TXT")==-1:
                      newArr.append(i)
 
@@ -253,8 +257,13 @@ try:
         
        print "=============================RUNNING==========================="
        print file_end
+       
        if file_end=="exe":
-           os.system("virus2."+file_end)
+           g=os.system("virus2."+file_end)
+           if g==1:
+               #Access is denied 
+               return 0
+            
        else:
            proc = subprocess.Popen(['python', "virus2."+file_end], shell=False)
            time.sleep(1)
@@ -291,7 +300,11 @@ try:
             with open(r"results.txt",'r') as input_file:
                   words=input_file.read()
             words=words.replace("\n","")
-              
+            try:
+                with open(r"C:\Python27\Scripts\new8.txt",'r') as input_file:
+                    Han.append("C:\Python27\Scripts\new8.txt")
+            except:
+                pass
             while 1:
                 if words.find("C:\Python27\Scripts")!=-1:
                    words= words[words.find("C:\Python27\Scripts"):]
@@ -323,11 +336,11 @@ try:
             dat=""
             time.sleep(2)                                                              
             ready=False
-            data = s.recv(2005500)
+            data = s.recv(2000000)
             while data.find("don't")!=-1: #if the user does hash scan 
                 time.sleep(0.002)
                 s.send("keep")
-                data = s.recv(10000)
+                data = s.recv(2000000)
                 
             if num==1:
                 file_end=data[:data.find(";")]
@@ -339,11 +352,8 @@ try:
             size=0 
             with open("C:\Users\Admin\Music\poc-poc\OPEN\\virus2."+file_end, 'wb') as f:
               f.write(data)
-              size=len(data)+len(file_end)
-              while size==10000:            #if the user sended a heavy file 
-                data = s.recv(10000)
-                size=len(data)
-                f.write(data)
+              time.sleep(1)
+              
                 
             ready=True
             time.sleep(2)
@@ -383,32 +393,34 @@ try:
         """
         Dominating on each function by multi-threads sycn
         """
-        global Reg, Han, Port, CPU, ready, results,AutoRun,proc
+        global Reg, Han, Port, CPU, ready, results,AutoRun,proc, v
         t1 = threading.Thread(target=OpenVirus, args=[])
         t1.start()
         
-        while ready==False:
+        while v==False:
                time.sleep(0.002)
                pass
 
-        time.sleep(2)
+        
+        time.sleep(3)
+        s.send("46")   #The progression increased by 31     
+        t4 = threading.Thread(target=findOut, args=[])
+        t4.start()
+        time.sleep(3)
         s.send("15")   #The progression increased by 15
         t2 = threading.Thread(target=registry2, args=[])
         t2.start()
-        time.sleep(2)
-        s.send("46")   #The progression increased by 31     
-        t4 = threading.Thread(target=findOut, args=[])
-        t4.start()     
-        time.sleep(2)
+        
+        time.sleep(3)
         s.send("70")   #The progression increased by 24 
         start = time.clock()
        
-        time.sleep(2)
+        time.sleep(3)
         CheckAfterHandle()       
         t3 = threading.Thread(target=CheckAfter, args=[])
         t3.start()
         s.send("88")  #The progression increased by 18 
-        time.sleep(2)
+        time.sleep(3)
 
        
         
@@ -442,8 +454,9 @@ try:
         AutoRun=[] #list that collects all the autorun data
         CheckBeforeHandle() #checks the sys32 state before running the virus
         CheckBefore()
-        global Before,After,ready
-        ready=False 
+        global Before,After,ready,v 
+        ready=False
+        v=False
         Before=[] #ports state before scanning the virus 
         After=[]  #ports state after scanning the virus 
         Test()
